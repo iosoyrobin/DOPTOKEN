@@ -1,1 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOPT - Stablecoin RD$</title>
+  <style>
+    :root {
+      --background: #FFFFFF;
+      --overlay: rgba(255, 255, 255, 0.65);
+      --text-primary: #1F2937;
+      --text-secondary: #4B5563;
+      --card-bg: #FFFFFF;
+      --card-shadow: rgba(0, 0, 0, 0.05);
+      --card-shadow-hover: rgba(0, 0, 0, 0.08);
+      --icon-fill: #FBBF24;
+    }
 
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: #121212;
+        --overlay: rgba(0, 0, 0, 0.3);
+        --text-primary: #E5E7EB;
+        --text-secondary: #9CA3AF;
+        --card-bg: #1F2937;
+        --card-shadow: rgba(0, 0, 0, 0.2);
+        --card-shadow-hover: rgba(0, 0, 0, 0.3);
+        --icon-fill: #FBBF24;
+      }
+    }
+
+    html.dark {
+      --background: #121212;
+      --overlay: rgba(0, 0, 0, 0.3);
+      --text-primary: #E5E7EB;
+      --text-secondary: #9CA3AF;
+      --card-bg: #1F2937;
+      --card-shadow: rgba(0, 0, 0, 0.2);
+      --card-shadow-hover: rgba(0, 0, 0, 0.3);
+      --icon-fill: #FBBF24;
+    }
+
+    html:not(.dark) {
+      --background: #FFFFFF;
+      --overlay: rgba(255, 255, 255, 0.65);
+      --text-primary: #1F2937;
+      --text-secondary: #4B5563;
+      --card-bg: #FFFFFF;
+      --card-shadow: rgba(0, 0, 0, 0.05);
+      --card-shadow-hover: rgba(0, 0, 0, 0.08);
+      --icon-fill: #FBBF24;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    body {
+      position: relative;
+      z-index: 0;
+      color: var(--text-primary);
+      background: var(--background);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('https://i.postimg.cc/8PwpFGQr/bg.png') center/cover no-repeat fixed;
+      z-index: -2;
+      transform: translateZ(0);
+      will-change: transform;
+      display: none;
+    }
+    html:not(.dark) body::before {
+      display: block;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay);
+      backdrop-filter: blur(4px);
+      z-index: -1;
+    }
+    header, section, footer {
+      padding: 2rem;
+      text-align: center;
+    }
+    header {
+      position: relative;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .theme-toggle svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: var(--text-secondary);
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+    h3 {
+      font-size: 1.25rem;
+      margin: 1rem 0;
+      color: var(--text-primary);
+    }
+    p.subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+    }
+    .button {
+      display: inline-block;
+      margin: 1.5rem 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 9999px;
+      background: linear-gradient(to right, #FBBF24, #F59E0B);
+      color: #1F2937;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .button:hover {
+      background: linear-gradient(to right, #F59E0B, #D97706);
+      transform: translateY(-2px);
+    }
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin: 2rem auto;
+      max-width: 960px;
+    }
+    .card {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px var(--card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px var(--card-shadow-hover);
+    }
+    .card-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      fill: var(--icon-fill);
+      margin: 0 auto 1rem;
+      transition: transform 0.3s ease;
+    }
+    .card:hover .card-icon {
+      transform: scale(1.2);
+    }
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    .card p {
+      color: var(--text-secondary);
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+    footer {
+      color: var(--text-secondary);
+    }
+    footer a.button {
+      margin-top: 1rem;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    #whitepaper {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      max-width: 900px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      margin: auto;
+    }
+    #whitepaper p, #whitepaper ul, #whitepaper table {
+      color: var(--text-secondary);
+    }
+    #whitepaper ul {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0;
+    }
+    #whitepaper table {
+      margin: 1rem 0;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #whitepaper th, #whitepaper td {
+      padding: 0.5rem;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    .modal-close svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: var(--text-secondary);
+    }
+    @media (min-width: 768px) {
+      .cards {
+        flex-direction: row;
+      }
+      h1 {
+        font-size: 3rem;
+      }
+      p.subtitle {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bienvenido a DOPT</h1>
+    <p class="subtitle">La stablecoin 1:1 con el RD$, diseñada para pagos, remesas y DeFi.</p>
+    <button class="theme-toggle" aria-label="Alternar tema">
+      <svg id="theme-icon" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z" fill="currentColor"></path>
+      </svg>
+    </button>
+    <div class="nav-links">
+      <a class="button" href="#caracteristicas">Características</a>
+      <a class="button" href="#usos">Casos de Uso</a>
+      <a class="button" href="javascript:void(0);" onclick="toggleWhitepaper()">Ver Whitepaper</a>
+    </div>
+  </header>
+
+  <section id="caracteristicas">
+    <h2>Características</h2>
+    <div class="cards">
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 4V2M12 22V20M4 12H2M22 12H20M5.64 5.64L4.22 4.22M19.78 19.78L18.36 18.36M5.64 18.36L4.22 19.78M19.78 4.22L18.36 5.64" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3>1:1 con el RD$</h3>
+        <p>Respaldo total en pesos dominicanos, auditado y transparente.</p>
+      </div>
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 24 24">
+          <path d="M12 2L15 9H9L12 2Z" fill="currentColor"/>
+          <path d="M10 9L6 16H18L14 9H10Z" fill="currentColor" opacity="0.8"/>
+          <path d="M5 16H19V20H5V16Z" fill="currentColor" opacity="0.6"/>
+          <path d="M12 12V14" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3>Bajas Tarifas</h3>
+        <p>Movimientos eficientes con bajo costo en Binance Smart Chain.</p>
+      </div>
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 6V9M12 15V18M8 8L10 10M16 16L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M9 12H15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3>Seguridad y Transparencia</h3>
+        <p>Contratos auditados, reservas públicas y gobernanza comunitaria.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="usos">
+    <h2>Casos de Uso</h2>
+    <div class="cards">
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 24 24">
+          <path d="M4 6H20C21.1 6 22 6.9 22 8V16C22 17.1 21.1 18 20 18H4C2.9 18 2 17.1 2 16V8C2 6.9 2.9 6 4 6Z" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M6 10L8 12L10 10M14 10L16 12L18 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="2" fill="currentColor"/>
+        </svg>
+        <h3>Pagos Rápidos</h3>
+        <p>Compra y venta de bienes y servicios con confirmación inmediata.</p>
+      </div>
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2A10 10 0 0 1 22 12A10 10 0 0 1 12 22A10 10 0 0 1 2 12A10 10 0 0 1 12 2M12 6V18M6 12H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M8 8L16 16M16 8L8 16" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <h3>Remesas</h3>
+        <p>Envía y recibe dinero desde cualquier parte del mundo sin bancos.</p>
+      </div>
+      <div class="card">
+        <svg class="card-icon" viewBox="0 0 24 24">
+          <path d="M6 6H10V10H6V6ZM14 6H18V10H14V6ZM6 14H10V18H6V14ZM14 14H18V18H14V14Z" fill="currentColor"/>
+          <path d="M10 8H14M10 16H14M8 10V14M16 10V14" stroke="#1F2937" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="1" fill="#1F2937"/>
+        </svg>
+        <h3>Integración en DeFi</h3>
+        <p>Úsalo en protocolos DeFi para staking, préstamos y más.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 DOPT. Todos los derechos reservados.</p>
+    <p><a href="#" class="button">Volver arriba</a></p>
+  </footer>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div id="whitepaper">
+      <button class="modal-close" aria-label="Cerrar Whitepaper">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <h2>Whitepaper DOPT</h2>
+      <p><strong>Resumen:</strong> DOPT es una stablecoin descentralizada anclada al Peso Dominicano (RD$), diseñada para ofrecer una experiencia financiera estable, rápida y accesible en Web3...</p>
+      <h3>Introducción</h3>
+      <p>Las stablecoins son fundamentales para DeFi... DOPT surge como una alternativa robusta...</p>
+
+      <h3>Problema del Mercado</h3>
+      <ul>
+        <li>Estabilidad 1:1 con RD$</li>
+        <li>Tarifas bajas</li>
+        <li>Accesibilidad multiplataforma</li>
+        <li>Transparencia y gobernanza</li>
+      </ul>
+
+      <h3>La Solución DOPT</h3>
+      <ul>
+        <li>Basado en BSC y opBNB</li>
+        <li>Contrato BEP-20 con auditoría</li>
+        <li>Reservas auditadas en RD$</li>
+        <li>Tarifa mínima: 0.02%</li>
+        <li>Interoperabilidad con Web3</li>
+      </ul>
+
+      <h3>Detalles Técnicos</h3>
+      <table style="width:100%; border-collapse: collapse;">
+        <tr><th style="text-align:left; border-bottom:1px solid #FBBF24;">Elemento</th><th style="text-align:left; border-bottom:1px solid #FBBF24;">Valor</th></tr>
+        <tr><td>Plataforma</td><td>Binance Smart Chain</td></tr>
+        <tr><td>Lenguaje</td><td>Solidity 0.8.29</td></tr>
+        <tr><td>Auditorías</td><td>ReentrancyGuard, AccessControl</td></tr>
+        <tr><td>Tarifa</td><td>0.02% por transacción</td></tr>
+        <tr><td>Dirección de Reservas</td><td>0x3FF7...e90135</td></tr>
+      </table>
+
+      <h3>Tokenomics</h3>
+      <ul>
+        <li><strong>Nombre:</strong> Dominican Peso Token (DOPT)</li>
+        <li><strong>Símbolo:</strong> DOPT</li>
+        <li><strong>Suministro:</strong> 10,000 unidades</li>
+        <li><strong>Tarifas:</strong> 0.02% por transacción</li>
+        <li><strong>Utilidad:</strong> P2P, pagos, DeFi, gobernanza futura</li>
+      </ul>
+
+      <h3>Hoja de Ruta</h3>
+      <ul>
+        <li><strong>2025 Q1:</strong> Lanzamiento del contrato</li>
+        <li><strong>2025 Q2:</strong> Integración con exchanges</li>
+        <li><strong>2025 Q3:</strong> Auditorías externas</li>
+        <li><strong>2026:</strong> Expansión multichain</li>
+        <li><strong>2027:</strong> Gobernanza descentralizada</li>
+      </ul>
+
+      <h3>Equipo y Comunidad</h3>
+      <ul>
+        <li><strong>Fundador:</strong> RCB</li>
+        <li><strong>Desarrollo:</strong> Expertos en smart contracts</li>
+        <li><strong>Comunidad:</strong> Enfocada en inclusión financiera RD</li>
+      </ul>
+
+      <h3>Conclusión</h3>
+      <p>DOPT busca convertirse en el estándar digital del RD$ en Web3, con reservas verificables, tecnología moderna y comunidad abierta. Únete a esta evolución.</p>
+
+      <div style="text-align:center; margin-top:2rem;">
+        <button class="button" onclick="toggleWhitepaper()">Cerrar Whitepaper</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Detectar preferencia del sistema y aplicar tema inicial
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    const html = document.documentElement;
+    const themeIcon = document.getElementById("theme-icon");
+
+    const sunIcon = '<path d="M12 2V4M12 20V22M2 12H4M20 12H22M4.93 4.93L6.34 6.34M17.66 17.66L19.07 19.07M4.93 19.07L6.34 17.66M17.66 6.34L19.07 4.93M12 16C14.21 16 16 14.21 16 12C16 9.79 14.21 8 12 8C9.79 8 8 9.79 8 12C8 14.21 9.79 16 12 16Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    const moonIcon = '<path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 16C9.79 16 8 14.21 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 14.21 14.21 16 12 16Z" fill="currentColor"/>';
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      html.classList.toggle("dark", savedTheme === "dark");
+    } else {
+      html.classList.toggle("dark", prefersDarkScheme.matches);
+    }
+
+    const updateIcon = () => {
+      themeIcon.innerHTML = html.classList.contains("dark") ? sunIcon : moonIcon;
+    };
+    updateIcon();
+
+    prefersDarkScheme.addEventListener("change", (e) => {
+      if (!localStorage.getItem("theme")) {
+        html.classList.toggle("dark", e.matches);
+        updateIcon();
+      }
+    });
+
+    document.querySelector(".theme-toggle").addEventListener("click", () => {
+      html.classList.toggle("dark");
+      const isDark = html.classList.contains("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+      updateIcon();
+    });
+
+    function toggleWhitepaper() {
+      const modal = document.getElementById('modalOverlay');
+      const isOpen = modal.classList.toggle('open');
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+
+      if (isOpen) {
+        document.getElementById('whitepaper').focus();
+      }
+    }
+
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modalOverlay')) {
+        toggleWhitepaper();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('modalOverlay').classList.contains('open')) {
+        toggleWhitepaper();
+      }
+    });
+  </script>
+</body>
+</html>
